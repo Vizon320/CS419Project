@@ -1,14 +1,9 @@
-<%@ page language="java" contentType="text/html; charset=ISO-8859-1" pageEncoding="ISO-8859-1"%>
-    
-<%@ page import = "pkg.*" %>
-<%@ page import = "java.util.*" %>
-<jsp:useBean id = "shoppingListBeanId" class = "pkg.ListBean" scope = "session" ></jsp:useBean>
-
+<%@ page language="java" contentType="text/html; charset=ISO-8859-1"
+    pageEncoding="ISO-8859-1"%>
 <HTML>
   <head>
-  <title> testsite.jsp </title>
   <meta charset="ISO-8859-1">
-	<!-- rgb(171, 210, 237) -->
+
     <style>
 
 
@@ -17,8 +12,9 @@
       padding: 0;
       font-family: 'Open Sans', sans-serif;
       font-size: 16px;
-      background: rgb(255, 255, 255);
+      background: rgb(171, 210, 237);
       color: #333;
+
     }
 
     a {
@@ -249,15 +245,17 @@
           <label style="position: relative; font-weight: bold;font-size: 1.17em;" class="debugonoff"><input type="radio" name="donoff" onclick="debugload(this.value)" value="no"> debug off</label>
 
           <nav class="header-nav">
+            <ul style="margin-block-start: 0; margin-block-end: 0;padding-inline-start: 0;">
 
-			<!-- The buttons to choose a store -->
-			<form class="TheForm2" id="myForm2" action="testservlet" method="post">
-				<ul style="margin-block-start: 0; margin-block-end: 0;padding-inline-start: 0;">
-             		<li><input type="radio" name="Store" onclick="storeload(this.value)" value="target"> Target</li>
-             		<li><input type="radio" name="Store" onclick="storeload(this.value)" value="costco"> Costco</li>
-              		<li><input type="radio" name="Store" onclick="storeload(this.value)" value="walmart"> Walmart</li>
-              	</ul>
+
+<form class="TheForm2" id="myForm2" action="ChangeStoreServlet" method="post">
+
+              <li>  <input type="radio" name="Store"onclick="storeload(this.value)" value="target"> Target</li>
+              <li><input type="radio" name="Store"   onclick="storeload(this.value)" value="costco"> Costco</li>
+              <li>  <input type="radio" name="Store" onclick="storeload(this.value)" value="walmart"> Walmart</li>
+<input type="hidden" name="test" value="storepick" class="pathID">            
             </form>
+            </ul>
           </nav>
         </header>
         <br>
@@ -308,13 +306,23 @@
 
         </div>
         <div class="picW">
+       
           <img  src="maptmpwallmart.png">
+          <br>
+           <br>
+          <h2 class="finalpath"></h2>
         </div>
         <div class="picC">
           <img  src="maptmpcostco.png">
+          <br>
+           <br>
+          <h2 class="finalpath"></h2>
         </div>
         <div class="picT">
           <img  src="maptmptarget.png">
+          <br>
+           <br>
+          <h2 class="finalpath"></h2>
         </div>
         <div class="tableHolder2">
           <table  id="myTable2">
@@ -345,10 +353,10 @@
           <table  id="myTable">
             <tbody class="products">
               <tr>
-                <!--When a header is clicked, run the sortTable function, with a parameter, 0 for sorting by names, 1 for sorting by department-->
+                <!--When a header is clicked, run the sortTable function, with a parameter, 0 for sorting by names, 1 for sorting by country:-->
                 <th style="width:173px;"onclick="sortTable(0)">Name</th>
                 <th style="width:173px;" onclick="sortTable(1)">Department</th>
-                <th></th>
+                <th>ADD</th>
 
               </tr>
             </tbody>
@@ -360,9 +368,9 @@
         <br>
 
         <div class="shopping-cart">
-        <!-- This is where the tsp comes in -->
-          <form class="TheForm" id="myForm" action="page2" method="post">
-          <!-- <input type="hidden" name="shoppingList" value="?????">-->
+          <form class="TheForm" id="myForm" action="TSPRunningServlet" method="post">
+          <input type="hidden" name="test" value="itempick" class="pathID">            
+          
             <div class="shopping-cart-head">
               <span class="product-quantity">0</span> Product(s) in Cart
             </div>
@@ -370,7 +378,7 @@
             </ul>
             <div class="cart-buttons">
               <a  class="button empty-cart-btn">Empty</a>
-              <a  class="button cart-checkout">Get Path</a>
+              <a  class="button cart-checkout">Checkout</a>
             </div>
           </form>
 
@@ -383,8 +391,10 @@
 
 
     </body>
-	
+
     <script type="text/javascript">
+    
+    var finalpathVAR = document.querySelector(".finalpath");
     var test = localStorage.getItem("store");
     var tileVAR = document.querySelector(".header-logo");
     if (test != "costco" && test != "walmart" && test != "target"){
@@ -487,66 +497,67 @@ document.getElementById("myForm2").submit();
 
        }
        window.onload = function() {
-	         if(sessionStorage.length == 0){
-	           debug2VAR.innerHTML = "empty";
-	
-	         }
-	         else{
-	           var backupOnload = document.querySelector(".shopping-cart-list");
-	           backupOnload.innerHTML = sessionStorage.getItem("thehtml");
-	           //loads another piece of webpage
-	           debug10VAR.innerHTML= JSON.stringify(productsInCart[0].product.id);
-	           for (let i = 0; i < productsInCart.length; i++) {
-	             document.getElementById(JSON.stringify(productsInCart[i].product.id)).click();
-	           }
-	
-	         }
+         if(sessionStorage.length == 0){
+           debug2VAR.innerHTML = "empty";
 
-			var test = localStorage.getItem("store");
-	         var viewPic = sessionStorage.getItem("Pic");
-	         var viewTableHolder2 = sessionStorage.getItem("TableHolder2");
-	         var viewShoppingcart = sessionStorage.getItem("Shopping-cart");
-	         var viewTableHolder = sessionStorage.getItem("TableHolder");
-	         if (test == "costco"){
-	           document.getElementsByClassName("picC")[0].style.display=viewPic;
-	
-	         }
-	         if (test == "walmart"){
-	           document.getElementsByClassName("picW")[0].style.display=viewPic;
-	
-	         }
-	         if (test == "target"){
-	           document.getElementsByClassName("picT")[0].style.display=viewPic;
-	
-	         }
-	         document.getElementsByClassName("tableHolder2")[0].style.display=viewTableHolder2;
-	         document.getElementsByClassName("shopping-cart")[0].style.display=viewShoppingcart;
-	         document.getElementsByClassName("tableHolder")[0].style.display=viewTableHolder;
+         }
+         else{
+           var backupOnload = document.querySelector(".shopping-cart-list");
+           backupOnload.innerHTML = sessionStorage.getItem("thehtml");
+           //loads another piece of webpage
+           debug10VAR.innerHTML= JSON.stringify(productsInCart[0].product.id);
+           for (let i = 0; i < productsInCart.length; i++) {
+             document.getElementById(JSON.stringify(productsInCart[i].product.id)).click();
+           }
+
+         }
+
+var test = localStorage.getItem("store");
+         var viewPic = sessionStorage.getItem("Pic");
+         var viewTableHolder2 = sessionStorage.getItem("TableHolder2");
+         var viewShoppingcart = sessionStorage.getItem("Shopping-cart");
+         var viewTableHolder = sessionStorage.getItem("TableHolder");
+         finalpathVAR.innerHTML= '${messagePath}';
+
+         if (test == "costco"){
+           document.getElementsByClassName("picC")[0].style.display=viewPic;
+
+         }
+         if (test == "walmart"){
+           document.getElementsByClassName("picW")[0].style.display=viewPic;
+           
+         }
+         if (test == "target"){
+           document.getElementsByClassName("picT")[0].style.display=viewPic;
+
+         }
+         document.getElementsByClassName("tableHolder2")[0].style.display=viewTableHolder2;
+         document.getElementsByClassName("shopping-cart")[0].style.display=viewShoppingcart;
+         document.getElementsByClassName("tableHolder")[0].style.display=viewTableHolder;
 
        }
-       
        function goBack(){
-	         var viewPic = sessionStorage.getItem("Pic");
-	         var test = localStorage.getItem("store");
-	
-	         var viewTableHolder2 = sessionStorage.getItem("TableHolder2");
-	         var viewShoppingcart = sessionStorage.getItem("Shopping-cart");
-	         var viewTableHolder = sessionStorage.getItem("TableHolder");
-	         if (test == "costco"){
-	           document.getElementsByClassName("picC")[0].style.display=viewPic;
-	
-	         }
-	         if (test == "walmart"){
-	           document.getElementsByClassName("picW")[0].style.display=viewPic;
-	
-	         }
-	         if (test == "target"){
-	           document.getElementsByClassName("picT")[0].style.display=viewPic;
-	
-	         }
-	         document.getElementsByClassName("tableHolder2")[0].style.display=viewTableHolder2;
-	         document.getElementsByClassName("shopping-cart")[0].style.display=viewShoppingcart;
-	         document.getElementsByClassName("tableHolder")[0].style.display=viewTableHolder;
+         var viewPic = sessionStorage.getItem("Pic");
+         var test = localStorage.getItem("store");
+
+         var viewTableHolder2 = sessionStorage.getItem("TableHolder2");
+         var viewShoppingcart = sessionStorage.getItem("Shopping-cart");
+         var viewTableHolder = sessionStorage.getItem("TableHolder");
+         if (test == "costco"){
+           document.getElementsByClassName("picC")[0].style.display=viewPic;
+
+         }
+         if (test == "walmart"){
+           document.getElementsByClassName("picW")[0].style.display=viewPic;
+
+         }
+         if (test == "target"){
+           document.getElementsByClassName("picT")[0].style.display=viewPic;
+
+         }
+         document.getElementsByClassName("tableHolder2")[0].style.display=viewTableHolder2;
+         document.getElementsByClassName("shopping-cart")[0].style.display=viewShoppingcart;
+         document.getElementsByClassName("tableHolder")[0].style.display=viewTableHolder;
 
        }
 
@@ -601,31 +612,32 @@ document.getElementById("myForm2").submit();
 
 debug8VAR.innerHTML = localStorage.getItem("store");
 var test = localStorage.getItem("store");
-if (test == "walmart" && '${message2}' != '[]' ){
+if (test == "walmart" && '${messageAll}' != '[]' ){
   
-  var products = '${message2}';
-  localStorage.setItem("holder", '${message2}')
+  var products = '${messageAll}';
+  localStorage.setItem("holder", '${messageAll}')
 }
-if (test == "target"  && '${message2}' != '[]'){
- var products = '${message2}';
- localStorage.setItem("holder", '${message2}')
+if (test == "target"  && '${messageAll}' != '[]'){
+ var products = '${messageAll}';
+ localStorage.setItem("holder", '${messageAll}')
 
 }
-if (test == "costco"  && '${message2}' != '[]'){
-  var products = '${message2}';
-  localStorage.setItem("holder", '${message2}')
+if (test == "costco"  && '${messageAll}' != '[]'){
+  var products = '${messageAll}';
+  localStorage.setItem("holder", '${messageAll}')
 
 }else{
 	var products = localStorage.getItem("holder");
 }
-			//var products = JSON.stringify(products);
-			debug9VAR.innerHTML = products;
-			
-			var products = JSON.parse(products);
-           	var makeProductList = function() {
-           	products.forEach(function(item) {
+
+//var products = JSON.stringify(products);
+debug9VAR.innerHTML = products;
+
+var products = JSON.parse(products);
+           var makeProductList = function() {
+             products.forEach(function(item) {
               
-		var hold;
+var hold;
                var productVAR = document.createElement("tr");
                productVAR.className = "product";
 
@@ -640,8 +652,7 @@ if (test == "costco"  && '${message2}' != '[]'){
              });
            }
 
-           	// Updates the cart list, call whenever it changes
-           var updateCartList = function() {
+           var creatCartList = function() {
 
              cartVAR.innerHTML = "";
              //debugVAR.innerHTML = "";
@@ -736,7 +747,7 @@ if (test == "costco"  && '${message2}' != '[]'){
                sessionStorage.clear();
                location.reload();
 
-               //updateCartList();
+               //creatCartList();
              });
              cartCheckoutVAR.addEventListener("click", function(event) {
 
@@ -747,15 +758,9 @@ if (test == "costco"  && '${message2}' != '[]'){
                sessionStorage.setItem("productsInCartTest", JSON.stringify(productsInCart));
 
                document.getElementById("myForm").submit();
-               
-            	// Get the sorted products from TSPRunningServlet and use them
-            	if('${listString}' != '[]') {
-	               	var cartProducts = '${listString}';
-	               	localStorage.setItem("cartString", '${listString}')
-	            }
 
-               	productsInCart = JSON.parse(cartProducts);
-               	updateCartList();
+
+               //creatCartList();
              });
              cartCheckoutVAR.addEventListener("dblclick", function(event) {
 
@@ -768,7 +773,7 @@ if (test == "costco"  && '${message2}' != '[]'){
                goBack();
 
 
-               //updateCartList();
+               //creatCartList();
              });
 
              returnVAR.addEventListener("click", function(event) {
@@ -781,7 +786,7 @@ if (test == "costco"  && '${message2}' != '[]'){
                goBack();
                //productsInCart = sessionStorage.getItem("productsInCartF");
 
-              //updateCartList();
+               //creatCartList();
 
              });
            }
@@ -789,31 +794,24 @@ if (test == "costco"  && '${message2}' != '[]'){
            var addToCart = function(id) {
              var obj = products[id];
 
-             // Check if item is already in the cart or not
              if(productsInCart.length === 0 || productFound(obj.id) === undefined) {
                productsInCart.push({product: obj, quantity: 1});
                sessionStorage.setItem("productsInCartTest", JSON.stringify(productsInCart));
-               
-               // Set the button to "In the Cart" as soon as product is added
-               var targetbutton = document.getElementsByClassName("button add-to-cart")[obj.id];
-               debug6VAR.innerHTML = JSON.stringify(obj.id);
-               targetbutton.style.background= "rgb(70, 70, 70)";
-               targetbutton.style.visibility = "hidden";
              } else {
-               //productsInCart.forEach(function(item) {
-                 //if(item.product.id === obj.id) {
+               productsInCart.forEach(function(item) {
+                 if(item.product.id === obj.id) {
 
-                   //var targetbutton = document.getElementsByClassName("button add-to-cart")[obj.id];
-                   //debug6VAR.innerHTML = JSON.stringify(obj.id);
-                   //targetbutton.innerHTML = "In The Cart";
-                   //targetbutton.style.background= "rgb(0, 33, 0)";
+                   var targetbutton = document.getElementsByClassName("button add-to-cart")[obj.id];
+                   debug6VAR.innerHTML = JSON.stringify(obj.id);
+                   targetbutton.innerHTML = "In The Cart";
+                   targetbutton.style.background= "rgb(0, 33, 0)";
 
 
-                 //}
-               //});
+                 }
+               });
              }
 
-             updateCartList();
+             creatCartList();
            }
 
            var removeFromCart = function(id) {
@@ -821,21 +819,24 @@ if (test == "costco"  && '${message2}' != '[]'){
 
              productsInCart.forEach(function(item) {
 
-               if (item.product.id == obj.id) {
-                 if(document.getElementsByClassName("button add-to-cart")[obj.id].style.visibility == "hidden"){
+               if (item.product.id === obj.id && item.quantity == 1) {
+                 if(document.getElementsByClassName("button add-to-cart")[obj.id].innerHTML == "In The Cart"){
                    var targetbutton2 = document.getElementsByClassName("button add-to-cart")[obj.id];
-                   targetbutton2.style.visibility = "visible";
+                   targetbutton2.innerHTML = "Add to Cart";
                    targetbutton2.style.background= " rgb(255, 33, 0)";
+                   var pos = productsInCart.indexOf(productFound(obj.id));
+                   debugVAR.innerHTML = productsInCart.indexOf(productFound(obj.id));
+                   productsInCart.splice(pos, 1);
+                 }else{
+                   var pos = productsInCart.indexOf(productFound(obj.id));
+                   debugVAR.innerHTML = productsInCart.indexOf(productFound(obj.id));
+                   productsInCart.splice(pos, 1);
                  }
-                 
-                 var pos = productsInCart.indexOf(productFound(obj.id));
-                 debugVAR.innerHTML = productsInCart.indexOf(productFound(obj.id));
-                 productsInCart.splice(pos, 1);
                }
              });
 
 
-             updateCartList();
+             creatCartList();
            }
            var productFound = function(productId) {
              return productsInCart.find(function(item) {
