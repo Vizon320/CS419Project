@@ -4,6 +4,20 @@ public class StoreProduct {
 	private String name, department, aisle, section;
 	private int x, y;
 	
+	/* Temporary constructor to make testing easier. Remove once TSPTestDriver is no longer needed */
+	public StoreProduct(String name, String department, String aisle, String section, int x, int y) {
+		setName(name);
+		setDepartment(department);
+		setAisle(aisle);
+		setSection(section);
+		setX(x);
+		setY(y);
+	}
+	
+	public StoreProduct() {
+		
+	}
+	
 	public String getName() {
 		return name;
 	}

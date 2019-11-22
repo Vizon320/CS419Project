@@ -12,7 +12,7 @@ import javax.servlet.http.HttpServletResponse;
 /**
  * Servlet implementation class ChangeStoreServlet
  */
-@WebServlet("/testservlet")
+@WebServlet("/ChangeStoreServlet")
 public class ChangeStoreServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
@@ -36,50 +36,61 @@ public class ChangeStoreServlet extends HttpServlet {
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		StoreDao.initializeJdbc();
-		// read form fields
-	 //String store2 = "walmart";
-	 String store2 = request.getParameter("Store");
-	 String locationY = request.getParameter("locationY");
-	 String id = request.getParameter("id");
-	 String name = request.getParameter("name");
-	 String department = request.getParameter("department");
-	 String aisle = request.getParameter("aisle");
-	 String section = request.getParameter("section");
-	 String locationX = request.getParameter("locationX");
+		String action = request.getParameter("test");
+        if("storepick".equals(action)){
+        	StoreDao store = new StoreDao();
+    		store.initializeJdbc();
+    	 //String store2 = "walmart";
+    	 String store2 = request.getParameter("Store");
+    	 
+    	 
+    	 List<StoreProduct> items = StoreDao.getAllProductsFromTable(store2);
+    	// JSONObject json = new JSONObject();
+    	 //json.put("name", "student");
 
-	 	//System.out.println(aisle + " " + locationX + " " + locationY + " " + id + " " + name + " " + department + " " +  section);
-	 	
-	 	// Create a List of all store products from table "store2" and a JSONArray
-	 	List<StoreProduct> items = StoreDao.getAllProductsFromTable(store2);
-		JSONArray arrayF = new JSONArray();
-		
-		// Populate JSONArray arrayF with elements from List items
-		 int k = 0;
-		 for(StoreProduct item : items) {
-			 JSONObject itemF = new JSONObject();
-	
-			 itemF.put("id", k);
-			 itemF.put("locationX", item.getX());
-			 itemF.put("locationY", item.getY());
-			 itemF.put("name", item.getName());
-			 
-			 itemF.put("department", item.getDepartment());
-			 itemF.put("aisle", item.getAisle());
-			 itemF.put("section", item.getSection());
-			 arrayF.add(itemF);
-			 
-			 k++;
-		}
-		 
-		 // Convert arrayF to a string message2
-		 String message2 = arrayF.toString();
-		 //System.out.println("items: " + message2);
-        
-		 // Pass along message2 back to the website
-        request.setAttribute("message2", message2);
-        RequestDispatcher rd = request.getRequestDispatcher("/testsite.jsp");
-        rd.forward(request, response);
+    	// JSONArray array = new JSONArray();
+    	// JSONObject item2 = new JSONObject();
+    	// item2.put("information", "test");
+    	// item2.put("id", 3);
+    	// item2.put("name", "course1");
+    	// array.add(item2);
+
+    	// json.put("course", array);
+    	// String message = json.toString();
+    	//	System.out.println(message);
+    		JSONArray arrayF = new JSONArray();
+    		 
+    		 //System.out.println(message2);
+    		// request.setAttribute("message2", message2);
+    		 int k = 0;
+    	 for(StoreProduct item : items) {
+    		 
+    		 JSONObject itemF = new JSONObject();
+
+    		 itemF.put("id", k);
+    		 itemF.put("locationX", item.getX());
+    		 itemF.put("locationY", item.getY());
+    		 itemF.put("name", item.getName());
+    		 
+    		 itemF.put("department", item.getDepartment());
+    		 itemF.put("aisle", item.getAisle());
+    		 itemF.put("section", item.getSection());
+    		 arrayF.add(itemF);
+    		 
+    		 k++;
+//    			//lblStatus.setText(lblStatus.getText() + "\n" + item.getName());
+    			//System.out.println(item.getName());
+    		}
+    	 
+     
+           // String username = request.getParameter("username");
+    	// String username = JSON.stringify(test2);
+    	 String messageAll = arrayF.toString();
+           System.out.println("items: " + messageAll);
+            
+            request.setAttribute("messageAll", messageAll);
+            RequestDispatcher rd = request.getRequestDispatcher("/testsite.jsp");
+            rd.forward(request, response);        }
 	}
 
 }

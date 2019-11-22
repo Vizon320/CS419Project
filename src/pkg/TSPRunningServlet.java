@@ -1,22 +1,19 @@
 package pkg;
 
+import org.json.simple.*;
 import java.io.IOException;
-import java.util.*;
-
+import java.util.ArrayList;
+import java.util.List;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
-import org.json.simple.*;
-import org.json.simple.parser.*;
-
 /**
- * Servlet implementation class TSPRunningServlet
+ * Servlet implementation class testservlet2
  */
-@WebServlet("/page2")
+@WebServlet("/TSPRunningServlet")
 public class TSPRunningServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
@@ -40,51 +37,111 @@ public class TSPRunningServlet extends HttpServlet {
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-	 	// Create a List to hold shopping cart products
-	 	List<StoreProduct> list = new ArrayList<StoreProduct>();
-		
-		// Put the shopping cart products into the list
-	 	JSONParser why = new JSONParser();
-		String readIn;
-		StoreProduct s = new StoreProduct();
-		s.setName(request.getParameter("name"));
-		s.setDepartment(request.getParameter("department"));
-		s.setAisle(request.getParameter("aisle"));
-		s.setSection(request.getParameter("section"));
-		s.setX(Integer.valueOf(request.getParameter("locationX")));
-		s.setY(Integer.valueOf(request.getParameter("locationY")));
-		list.add(s);
-		
-		// Run the list through the tsp and create a JSONArray
-		List<StoreProduct> items = Algorithms.shortestPath(list);
-		JSONArray arrayItems = new JSONArray();
-		
-		// Populate JSONArray arrayItems with elements from List items
-		 int k = 0;
-		 for(StoreProduct item : items) {
-			 JSONObject itemF = new JSONObject();
-	
-			 itemF.put("id", k);
-			 itemF.put("locationX", item.getX());
-			 itemF.put("locationY", item.getY());
-			 itemF.put("name", item.getName());
-			 
-			 itemF.put("department", item.getDepartment());
-			 itemF.put("aisle", item.getAisle());
-			 itemF.put("section", item.getSection());
-			 arrayItems.add(itemF);
-			 
-			 k++;
-		}
+		// TODO Auto-generated method stub
+		String action = request.getParameter("test");
+		if("itempick".equals(action)){
+        	String[] locationY = request.getParameterValues("locationY");
+   		 String[] id = request.getParameterValues("id");
+   		 String[] name = request.getParameterValues("name");
+   		 String[] department = request.getParameterValues("department");
+   		 String[] aisle = request.getParameterValues("aisle");
+   		 String[] section = request.getParameterValues("section");
+   		 String[] locationX = request.getParameterValues("locationX");
+			List<StoreProduct> listpath = new ArrayList<StoreProduct>();
+			listpath.add(new StoreProduct("Entrance", "", "", "", 0, 0));
+
+   		 for( int i = 0; i <= id.length - 1; i++)
+   		 {
+   			 System.out.println(aisle[i] + " " + locationX[i] + " "  + locationY[i] + " "  + id[i] + " "  + name[i] + " "  + department[i] + " "  +  section[i]);
+   			
+   			// Put the shopping cart products into the list
+   			StoreProduct s = new StoreProduct();
+   			//Integer.parseInt()
+   			s.setName(name[i]);
+   			s.setDepartment(department[i]);
+   			s.setAisle(aisle[i]);
+   			s.setSection(section[i]);
+   			s.setX(Integer.parseInt(locationX[i]));
+   			s.setY(Integer.parseInt(locationY[i]));
+   			listpath.add(s);
+   		 }
+ 		List<StoreProduct> itemspath = Algorithms.shortestPath(listpath);
+
+ 		JSONArray arrayFpath = new JSONArray();
 		 
-		 // Convert arrayF to a string listString
-		 String listString = arrayItems.toString();
-		 //System.out.println("items: " + message2);
-        
-		 // Pass along message2 back to the website
-        request.setAttribute("listString", listString);
+		 
+ 	///	for(int i = 0; i < itemspath.size(); i++) {
+			//StoreProduct itempath = itemspath.get(i);
+			//lblStatus.setText(lblStatus.getText() + "\n\t" + (i+1) + ": " + item.getName() + "\tat \t(" + item.getX() + ", " + item.getY() + ")");
+		//}
+ 		for(int i = 0; i < itemspath.size(); i++) {
+			StoreProduct itempath = itemspath.get(i);
+			//System.out.println("Optimal Path Cost = [" + itempath.second() + "]");
+   System.out.println("\n\t" + (i+1) + ": " + itempath.getName() + "\tat \t(" + itempath.getX() + ", " + itempath.getY() + ")");
+
+		 JSONObject itemFpath = new JSONObject();
+
+		 itemFpath.put("order", (i+1));
+		 itemFpath.put("locationX", itempath.getX());
+		 itemFpath.put("locationY", itempath.getY());
+		 itemFpath.put("name", itempath.getName());
+		 
+		// itemF.put("department", item.getDepartment());
+		// itemF.put("aisle", item.getAisle());
+		 //itemF.put("section", item.getSection());
+		 arrayFpath.add(itemFpath);
+		 
+	//	 k++;
+
+		}
+	 
+
+      
+	 String messagePath = arrayFpath.toString();
+ 		
+ 		
+ 		
+   		StoreDao store = new StoreDao();
+		store.initializeJdbc();
+	 String store2 = request.getParameter("Store");
+	 
+	 
+	 List<StoreProduct> items = StoreDao.getAllProductsFromTable(store2);
+	
+		JSONArray arrayF = new JSONArray();
+		 
+		 
+		 int k = 0;
+	 for(StoreProduct item : items) {
+		 
+		 JSONObject itemF = new JSONObject();
+
+		 itemF.put("id", k);
+		 itemF.put("locationX", item.getX());
+		 itemF.put("locationY", item.getY());
+		 itemF.put("name", item.getName());
+		 
+		 itemF.put("department", item.getDepartment());
+		 itemF.put("aisle", item.getAisle());
+		 itemF.put("section", item.getSection());
+		 arrayF.add(itemF);
+		 
+		 k++;
+
+		}
+	 
+ 
+       
+	 String messageAll = arrayF.toString();
+       System.out.println("messageAll: " + messageAll);
+       System.out.println("messagePath: " + messagePath);
+
+        request.setAttribute("messageAll", messageAll);
+        request.setAttribute("messagePath", messagePath);
+
         RequestDispatcher rd = request.getRequestDispatcher("/testsite.jsp");
-        rd.forward(request, response);
+        rd.forward(request, response);     
+   	        } 
 	}
 
 }
