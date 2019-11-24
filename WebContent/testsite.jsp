@@ -147,7 +147,14 @@
 
 
     }
+.finalpath{}
+.pic{
+      float: right;
 
+
+
+
+    }
     .picW img{
       zoom: 45%;
 
@@ -162,19 +169,26 @@
       zoom: 45%;
     }
     .picW {
-      float: right;
+      #float: right;
       display:none;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
 
     }
     .picC {
-      float: right;
+      #float: right;
       display:none;
-
+      flex-direction: column;
+align-items: center;
+      justify-content: center;
     }
     .picT {
-      float: right;
+      #float: right;
       display:none;
-
+      flex-direction: column;
+align-items: center;
+      justify-content: center;
     }
     .debugscontainer{
       display: none;
@@ -305,34 +319,45 @@
           </div>
 
         </div>
+        <div class="pic">
         <div class="picW">
        
           <img  src="maptmpwallmart.png">
           <br>
            <br>
-          <h2 class="finalpath"></h2>
+                             <div class="finalpath"></div>
+           
         </div>
         <div class="picC">
           <img  src="maptmpcostco.png">
           <br>
            <br>
-          <h2 class="finalpath"></h2>
+                             <div class="finalpath"></div>
+           
         </div>
         <div class="picT">
           <img  src="maptmptarget.png">
           <br>
            <br>
-          <h2 class="finalpath"></h2>
+                             <div class="finalpath"></div>
+           
         </div>
+                </div>
+        
         <div class="tableHolder2">
           <table  id="myTable2">
             <thead>
               <tr>
-                <th >id</th>
+              
+                <th >order</th>
+                                <th >id</th>
+                
                 <th >Name</th>
                 <th >Department</th>
                 <th >locationX</th>
                 <th >locationY</th>
+                <th >aisle</th>
+                <th >section</th>
 
               </tr>
             </thead>
@@ -444,7 +469,7 @@
          if(value == "walmart"){
            sessionStorage.clear();
            localStorage.setItem("store", "walmart");
-           var mytable = document.getElementById("myTable");
+         /*  var mytable = document.getElementById("myTable");
            var mytable2 = document.getElementById("myTable2");
            var button = document.querySelectorAll(".button");
            var product = document.querySelectorAll(".product");
@@ -464,7 +489,7 @@
            for (i = 0; i < product2.length; i++) {
              product2[i].style.backgroundColor = "rgb(179, 176, 36)";
 
-           }
+           } */
 
 document.getElementById("myForm2").submit();
 
@@ -517,18 +542,45 @@ var test = localStorage.getItem("store");
          var viewTableHolder2 = sessionStorage.getItem("TableHolder2");
          var viewShoppingcart = sessionStorage.getItem("Shopping-cart");
          var viewTableHolder = sessionStorage.getItem("TableHolder");
-         finalpathVAR.innerHTML= '${messagePath}';
+         //finalpathVAR.innerHTML= '${messagePath}';
+         var products2VAR = document.querySelector(".products2");
 
+         var productsPath = JSON.parse('${messagePath}');
+         var distancePath = JSON.parse('${messageTop}');
+         finalpathVAR.innerHTML= distancePath.Distance;
+         products2VAR.innerHTML="";
+     
+         productsPath.forEach(function(item) {
+                  
+
+             var li = document.createElement("li");
+             li.id = item.id;
+             var product2VAR = document.createElement("tr");
+             product2VAR.className = "product2";
+             product2VAR.innerHTML = '<td class="product2-order">'+item.order+'</td>'+
+             '<td class="product2-id">'+item.id+'</td>'+
+             '<td class="product2-name">'+item.name+'</td>'+
+             '<td class="product2-department">'+item.department+'</td>'+
+             '<td class="product2-locationX">'+item.locationX+'</td>'+
+             '<td class="product2-locationY">'+item.locationY+'</td>'+
+             '<td class="product2-aisle">'+item.aisle+'</td>'+
+             '<td class="product2-section">'+item.section+'</td>'+
+'</tr>';
+             products2VAR.appendChild(product2VAR);
+         });
          if (test == "costco"){
            document.getElementsByClassName("picC")[0].style.display=viewPic;
+           document.getElementsByClassName("pic")[0].style.display=viewPic;
 
          }
          if (test == "walmart"){
            document.getElementsByClassName("picW")[0].style.display=viewPic;
-           
+           document.getElementsByClassName("pic")[0].style.display=viewPic;
+
          }
          if (test == "target"){
            document.getElementsByClassName("picT")[0].style.display=viewPic;
+           document.getElementsByClassName("pic")[0].style.display=viewPic;
 
          }
          document.getElementsByClassName("tableHolder2")[0].style.display=viewTableHolder2;
@@ -545,14 +597,16 @@ var test = localStorage.getItem("store");
          var viewTableHolder = sessionStorage.getItem("TableHolder");
          if (test == "costco"){
            document.getElementsByClassName("picC")[0].style.display=viewPic;
-
+           document.getElementsByClassName("pic")[0].style.display=viewPic;
          }
          if (test == "walmart"){
            document.getElementsByClassName("picW")[0].style.display=viewPic;
+           document.getElementsByClassName("pic")[0].style.display=viewPic;
 
          }
          if (test == "target"){
            document.getElementsByClassName("picT")[0].style.display=viewPic;
+           document.getElementsByClassName("pic")[0].style.display=viewPic;
 
          }
          document.getElementsByClassName("tableHolder2")[0].style.display=viewTableHolder2;
@@ -660,7 +714,7 @@ var hold;
 
              //finalVAR.innerHTML = "";
              debug5VAR.innerHTML = JSON.stringify(productsInCart);
-
+//db1
              productsInCart.forEach(function(item) {
                //every element of the array or in this case every object in the productsincart array is used and appended
                debug4VAR.innerHTML = JSON.stringify(item);
@@ -751,7 +805,7 @@ var hold;
              });
              cartCheckoutVAR.addEventListener("click", function(event) {
 
-               sessionStorage.setItem("Pic", "block");
+               sessionStorage.setItem("Pic", "flex");
                sessionStorage.setItem("TableHolder2", "block");
                sessionStorage.setItem("Shopping-cart", "none");
                sessionStorage.setItem("TableHolder", "none");
@@ -764,7 +818,7 @@ var hold;
              });
              cartCheckoutVAR.addEventListener("dblclick", function(event) {
 
-               sessionStorage.setItem("Pic", "block");
+               sessionStorage.setItem("Pic", "flex");
                sessionStorage.setItem("TableHolder2", "block");
                sessionStorage.setItem("Shopping-cart", "none");
                sessionStorage.setItem("TableHolder", "none");
