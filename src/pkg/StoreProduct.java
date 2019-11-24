@@ -2,7 +2,7 @@ package pkg;
 
 public class StoreProduct {
 	private String name, department, aisle, section;
-	private int x, y;
+	private int x, y, Id;
 	
 	/* Temporary constructor to make testing easier. Remove once TSPTestDriver is no longer needed */
 	public StoreProduct(String name, String department, String aisle, String section, int x, int y) {
@@ -22,11 +22,18 @@ public class StoreProduct {
 		return name;
 	}
 	
+	public void setId(int Id) {
+		this.Id = Id;
+		
+	}
+	public int getId() {
+		return Id;
+	}
+	
 	public void setName(String name) {
 		if(name != null) this.name = name;
 		else this.name = "";
 	}
-
 	public String getDepartment() {
 		return department;
 	}

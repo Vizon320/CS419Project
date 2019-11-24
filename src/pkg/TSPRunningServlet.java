@@ -63,12 +63,13 @@ public class TSPRunningServlet extends HttpServlet {
    			s.setSection(section[i]);
    			s.setX(Integer.parseInt(locationX[i]));
    			s.setY(Integer.parseInt(locationY[i]));
+   			s.setId(Integer.parseInt(id[i]));
    			listpath.add(s);
    		 }
  		List<StoreProduct> itemspath = Algorithms.shortestPath(listpath);
 
  		JSONArray arrayFpath = new JSONArray();
-		 
+		 JSONObject itemFtop = new JSONObject();
 		 
  	///	for(int i = 0; i < itemspath.size(); i++) {
 			//StoreProduct itempath = itemspath.get(i);
@@ -78,14 +79,22 @@ public class TSPRunningServlet extends HttpServlet {
 			StoreProduct itempath = itemspath.get(i);
 			//System.out.println("Optimal Path Cost = [" + itempath.second() + "]");
    System.out.println("\n\t" + (i+1) + ": " + itempath.getName() + "\tat \t(" + itempath.getX() + ", " + itempath.getY() + ")");
-
+//String fPath = (i+1) + ": " + itempath.getName() + "\tat \t(" + itempath.getX() + ", " + itempath.getY() + ")";
 		 JSONObject itemFpath = new JSONObject();
 
 		 itemFpath.put("order", (i+1));
 		 itemFpath.put("locationX", itempath.getX());
 		 itemFpath.put("locationY", itempath.getY());
 		 itemFpath.put("name", itempath.getName());
-		 
+		 itemFpath.put("department", itempath.getDepartment());
+		 itemFpath.put("aisle", itempath.getAisle());
+		 itemFpath.put("section", itempath.getSection());
+		 itemFpath.put("id", itempath.getId());
+
+
+		// itemFpath.put("name", itempath.getName());
+		// itemFpath.put("outputitem", fPath);
+
 		// itemF.put("department", item.getDepartment());
 		// itemF.put("aisle", item.getAisle());
 		 //itemF.put("section", item.getSection());
@@ -95,10 +104,12 @@ public class TSPRunningServlet extends HttpServlet {
 
 		}
 	 
-
+			 System.out.println("Distance=" + Algorithms.returnDistance());
+			 itemFtop.put("Distance", Algorithms.returnDistance());
       
 	 String messagePath = arrayFpath.toString();
- 		
+	 String messageTop = itemFtop.toString();
+
  		
  		
    		StoreDao store = new StoreDao();
@@ -135,6 +146,10 @@ public class TSPRunningServlet extends HttpServlet {
 	 String messageAll = arrayF.toString();
        System.out.println("messageAll: " + messageAll);
        System.out.println("messagePath: " + messagePath);
+       System.out.println("messageTop: " + messageTop);
+
+       
+       request.setAttribute("messageTop", messageTop);
 
         request.setAttribute("messageAll", messageAll);
         request.setAttribute("messagePath", messagePath);

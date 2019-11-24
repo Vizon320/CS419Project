@@ -4,6 +4,7 @@ import java.io.*;
 import java.util.*;
 
 public class Algorithms {
+	static private String distance = "";
 	static double MAX_DOUBLE = Double.MAX_VALUE;
 	
 	/* Combines listPlusEndpoints and shortestPath into one handy function */
@@ -49,7 +50,7 @@ public class Algorithms {
 		}
 		else {
 			System.out.println("Optimal Path Cost = [" + finalPair.second() + "]");
-			
+			 distance= "Optimal Path Cost = [" + finalPair.second() + "]";
 			// myLine will contain the string of path indexes, including the index value of the starting city
 			// TODO: Kevin - But what if the starting city isnt first in ArrayList list?
 			String myline = "0 " + finalPair.first();
@@ -62,6 +63,9 @@ public class Algorithms {
 		}
 		
 		return finalPath;
+	}
+	static String returnDistance() {
+		return distance;
 	}
 	
 	/* Calculates distances for each permutation of paths and returns a Pair containing the path as a string and the shortest total distance as a double */
